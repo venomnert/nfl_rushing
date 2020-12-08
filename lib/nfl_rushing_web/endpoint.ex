@@ -24,7 +24,7 @@ defmodule NflRushingWeb.Endpoint do
     at: "/",
     from: :nfl_rushing,
     gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ~w(css fonts images js favicon.ico robots.txt export.csv)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
