@@ -1,7 +1,7 @@
 defmodule NflRushing.Boundary.DataManager do
   use GenServer
 
-  @data_file Application.app_dir(:nfl_rushing, "priv/static/rushing_2.json")
+  @data_file Application.app_dir(:nfl_rushing, "priv/static/rushing_small.json")
   alias NflRushing.Core.Rushing
 
 
