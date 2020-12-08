@@ -63,9 +63,6 @@ defmodule NflRushing.Boundary.DataManager do
   def handle_call(:reset_filter, _from, state) do
     updated_state = Map.put(state, :filtered_data, state.data)
 
-    IO.inspect(length(state.data), label: "MAIN DATA")
-    IO.inspect(length(updated_state.filtered_data), label: "FILTER DATA")
-
     {:reply, updated_state, updated_state}
   end
 
