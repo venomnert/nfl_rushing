@@ -22,6 +22,7 @@ defmodule NflRushingWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
+    cache_control_for_vsn_requests: "private",
     from: :nfl_rushing,
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt export.csv)
