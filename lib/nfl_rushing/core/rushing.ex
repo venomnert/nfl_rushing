@@ -9,6 +9,30 @@ defmodule NflRushing.Core.Rushing do
     |> normalize()
   end
 
+  def load_file_stream(path, chunk) do
+    data = path
+            |> File.stream!()
+            |> Jaxon.Stream.from_enumerable()
+            |> Jaxon.Stream.query([:root, :all])
+            |> Enum.take(chunk)
+
+    next_stream = path
+                  |> File.stream!()
+                  |> Jaxon.Stream.from_enumerable()
+                  |> Jaxon.Stream.query([:root, :all])
+                  |> Stream.drop(chunk)
+
+    {data, next_stream}
+
+  end
+
+  def next(stream, chunk) do
+    data = stream |> Enum.take(chunk) |> normalize()
+    next_stream = stream |> Stream.drop(chunk)
+
+    {data, next_stream}
+  end
+
   def sort(data, {:desc, sort_key}) do
     data
     |> Enum.sort(fn a,b ->
@@ -60,7 +84,7 @@ defmodule NflRushing.Core.Rushing do
   end
 
   defp convert_to_int(single_data) do
-    map_a = for {k,v} <- single_data, is_integer(v) or is_float(v), into: %{}, do: {k, v}
+    map_a = for {k,v} <- single_data, is_integer(v) or is_float(v), into: %{}, do: {k, abs(v)}
 
     map_b = for {k,v} <- single_data, is_binary(v), into: %{} do
       if k in @ignore_keys do
