@@ -7,43 +7,64 @@ defmodule NflRushingWeb.PageLive do
   def mount(_params, _session, socket) do
     data = DataManager.get()
     update_socket = assign(socket,
-                            headers: get_table_headers(data),
-                            filtered_data: data,
+                            headers: data.headers,
+                            filtered_data: data.filtered_data,
                             query: "",
-                            download_link: "")
+                            download_link: nil)
     {:ok, update_socket}
   end
 
   @impl true
   def handle_event("filter-player", %{"q" => query}, socket) do
-    filtered_data = DataManager.filter(query)
-    {:noreply, assign(socket, filtered_data: filtered_data)}
+    String.length(query)
+    |> case do
+        0 ->
+          updated_socket = reset_data(socket)
+          {:noreply, updated_socket}
+
+        _ ->
+          filtered_data = DataManager.filter(query)
+          updated_socket = assign(socket, filtered_data: filtered_data, download_link: nil)
+          {:noreply, updated_socket}
+    end
+  end
+
+  @impl true
+  def handle_event("reset", _params, socket) do
+    updated_socket = reset_data(socket)
+    {:noreply, updated_socket}
   end
 
   @impl true
   def handle_event("sort-asc", %{"header" => header}, socket) do
     filtered_data = DataManager.sort({:asc, header})
-    {:noreply, assign(socket, filtered_data: filtered_data)}
+    updated_socket = assign(socket, filtered_data: filtered_data, download_link: nil)
+    {:noreply, updated_socket}
   end
 
   @impl true
   def handle_event("sort-desc", %{"header" => header}, socket) do
     filtered_data = DataManager.sort({:desc, header})
-    {:noreply, assign(socket, filtered_data: filtered_data)}
+    updated_socket = assign(socket, filtered_data: filtered_data, download_link: nil)
+    {:noreply, updated_socket}
   end
 
   @impl true
   def handle_event("export-csv", _ , socket) do
     url = Task.async(DataManager, :export, [])
           |> Task.await()
-    IO.inspect(url, label: "URL IS HERE")
     {:noreply, assign(socket, download_link: url)}
   end
 
-  defp get_table_headers([]), do: []
-  defp get_table_headers(data) do
-    data
-    |> List.first()
-    |> Map.keys()
+  defp reset_data(socket) do
+    data = DataManager.reset_filter()
+
+    socket
+    |> assign(
+      filtered_data: data.filtered_data,
+      query: "",
+      download_link: nil
+    )
   end
+
 end
