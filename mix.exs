@@ -44,8 +44,7 @@ defmodule NflRushing.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-
-      {:nimble_csv, "~> 1.0"}
+      {:csv, "~> 2.4"}
     ]
   end
 
