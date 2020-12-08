@@ -61,6 +61,8 @@ defmodule NflRushing.Core.Rushing do
 
   def create_csv(data, header) do
     try do
+      remove_old_csv(@export_file)
+
       csv_data = data |> CSV.encode(headers: header)
 
       file = File.open!(@export_file, [:write, :utf8])
@@ -99,5 +101,14 @@ defmodule NflRushing.Core.Rushing do
     end
 
     Map.merge(map_a, map_b)
+  end
+
+  defp remove_old_csv(path) do
+    path
+    |> File.exists?()
+    |> case do
+      true -> File.rm!(path)
+      _ -> :ok
+    end
   end
 end
