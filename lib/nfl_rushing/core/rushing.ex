@@ -1,5 +1,6 @@
 defmodule NflRushing.Core.Rushing do
   @ignore_keys ["Player", "Team", "Pos"]
+  @export_file Application.app_dir(:nfl_rushing, "priv/static/export.csv")
 
   def load_file(path) do
     path
@@ -25,6 +26,26 @@ defmodule NflRushing.Core.Rushing do
   def filter(data, query) do
     data
     |> Enum.filter(&compare_player(&1, query))
+  end
+
+  def get_headers(data) do
+    data
+    |> List.first()
+    |> Map.keys()
+  end
+
+  def create_csv(data, header) do
+    try do
+      csv_data = data |> CSV.encode(headers: header)
+
+      file = File.open!(@export_file, [:write, :utf8])
+
+      csv_data |> Enum.each(&IO.write(file, &1))
+
+      @export_file
+    rescue
+      _ -> nil
+    end
   end
 
   defp compare_player(%{"Player" => player}, query) do
