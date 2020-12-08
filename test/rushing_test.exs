@@ -3,6 +3,8 @@ defmodule RushingTest do
   alias NflRushing.Core.Rushing
 
   @small_data_file Application.app_dir(:nfl_rushing, "priv/static/rushing_small.json")
+  @headers ["1st","1st%","20+","40+","Att","Att/G","Avg","FUM","Lng","Player","Pos","TD","Team","Yds","Yds/G"]
+  @export_file Application.app_dir(:nfl_rushing, "priv/static/export.csv")
 
   test "Load file & normalize" do
     @small_data_file
@@ -92,6 +94,25 @@ defmodule RushingTest do
     end
   end
 
+  describe "Header" do
+    test "get header" do
+      @small_data_file
+      |> Rushing.load_file()
+      |> Rushing.get_headers()
+      |> assert_header(@headers)
+    end
+  end
+
+  describe "Export" do
+    test "Test valid export" do
+      @small_data_file
+      |> Rushing.load_file()
+      |> Rushing.create_csv(@headers)
+
+      assert_export(@export_file, true)
+    end
+  end
+
   defp assert_datas(data, expected) do
     assert length(data) == length(expected)
     data
@@ -105,5 +126,20 @@ defmodule RushingTest do
     min_data = for row <- data, do: row[key]
     assert min_data == expected
     data
+  end
+  defp assert_header(data, expected) do
+    assert data == expected
+    data
+  end
+  defp assert_export(path, expected) do
+    assert File.exists?(path) == expected
+  end
+
+  defp clear_old_csv(path) do
+    File.exists?(path)
+    |> case do
+      true -> File.rm!(path)
+      _ -> nil
+    end
   end
 end
