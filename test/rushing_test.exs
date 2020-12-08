@@ -134,12 +134,4 @@ defmodule RushingTest do
   defp assert_export(path, expected) do
     assert File.exists?(path) == expected
   end
-
-  defp clear_old_csv(path) do
-    File.exists?(path)
-    |> case do
-      true -> File.rm!(path)
-      _ -> nil
-    end
-  end
 end
