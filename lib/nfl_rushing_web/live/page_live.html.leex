@@ -1,0 +1,42 @@
+<section class="phx-hero">
+  <h1>NFL Rushing Data</h1>
+
+  <form phx-change="filter-player">
+    <input type="text" name="q" value="<%= @query %>" placeholder="Filter by player's name" autocomplete="off" />
+  </form>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <%= for header <- @headers do %>
+            <th scope="col">
+              <%= header %>
+              <%= if header in ["Yds", "Lng", "TD"] do %>
+                <div>
+                  <a phx-click="sort-asc" phx-value-header="<%= header %>">&#9650;</a>
+                  <a phx-click="sort-desc" phx-value-header="<%= header %>">&#9660;</a>
+                </div>
+              <% end %>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+      <%= if length(@filtered_data) == 0 do %>
+        <tr>
+            <td colspan="<%= length(@headers) %>" style="text-align: center; font-weight: 600;">No Data</td>
+        </tr>
+      <% end %>
+      <%= for data <- @filtered_data do %>
+        <tr>
+          <%= for {_, v} <- data do %>
+            <td><%= v %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+  <a phx-click="export-csv" class="btn btn-primary">Export as CSV</a>
+  <a phx-click="export-csv" href="<%= @download_link %>" class="btn btn-primary" download>Download</a>
+</section>
