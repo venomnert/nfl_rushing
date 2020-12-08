@@ -56,6 +56,13 @@ defmodule NflRushingWeb.PageLive do
     {:noreply, assign(socket, download_link: url)}
   end
 
+  @impl true
+  def handle_event("next", _ , socket) do
+    data = DataManager.next()
+    updated_socket = assign(socket, filtered_data: data.filtered_data, download_link: nil)
+    {:noreply, updated_socket}
+  end
+
   defp reset_data(socket) do
     data = DataManager.reset_filter()
 
