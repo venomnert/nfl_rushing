@@ -15,6 +15,7 @@ defmodule NflRushing.Core.Rushing do
             |> Jaxon.Stream.from_enumerable()
             |> Jaxon.Stream.query([:root, :all])
             |> Enum.take(chunk)
+            |> normalize()
 
     next_stream = path
                   |> File.stream!()
