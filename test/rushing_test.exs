@@ -105,9 +105,12 @@ defmodule RushingTest do
 
   describe "Export" do
     test "Test valid export" do
+      file = @export_file
+              |> File.open!([:write, :utf8])
+
       @small_data_file
       |> Rushing.load_file()
-      |> Rushing.create_csv(@headers)
+      |> Rushing.create_csv(@headers, file)
 
       assert_export(@export_file, true)
     end
