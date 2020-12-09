@@ -17,6 +17,7 @@ defmodule NflRushingWeb.Router do
   scope "/", NflRushingWeb do
     pipe_through :browser
 
+    get "/export", ExportController, :get_csv
     live "/", PageLive, :index
   end
 end
