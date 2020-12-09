@@ -19,13 +19,4 @@ defmodule NflRushingWeb.Router do
 
     live "/", PageLive, :index
   end
-
-  if Mix.env() in [:dev, :test] do
-    import Phoenix.LiveDashboard.Router
-
-    scope "/" do
-      pipe_through :browser
-      live_dashboard "/dashboard", metrics: NflRushingWeb.Telemetry
-    end
-  end
 end
