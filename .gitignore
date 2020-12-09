@@ -36,6 +36,6 @@ npm-debug.log
 /priv/static/js
 /priv/static/favicon.ico
 /priv/static/robots.txt
-/priv/static/export.csv
+/*.csv
 
 .DS_store
