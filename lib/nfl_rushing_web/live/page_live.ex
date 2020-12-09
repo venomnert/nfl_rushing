@@ -50,13 +50,6 @@ defmodule NflRushingWeb.PageLive do
   end
 
   @impl true
-  def handle_event("export-csv", _ , socket) do
-    url = Task.async(DataManager, :export, [])
-          |> Task.await()
-    {:noreply, assign(socket, download_link: url)}
-  end
-
-  @impl true
   def handle_event("next", _ , socket) do
     data = DataManager.next()
     updated_socket = assign(socket, filtered_data: data.filtered_data, download_link: nil)
