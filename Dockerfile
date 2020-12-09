@@ -10,4 +10,4 @@ RUN mkdir assets
 COPY assets/package.json assets
 COPY assets/package-lock.json assets
 
-CMD mix deps.get && cd assets && npm install && cd .. && mix phx.server
+CMD mix deps.get && cd assets && npm install && npm rebuild node-sass && cd .. && mix phx.server
