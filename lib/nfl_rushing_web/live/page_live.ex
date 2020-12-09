@@ -9,8 +9,7 @@ defmodule NflRushingWeb.PageLive do
     update_socket = assign(socket,
                             headers: data.headers,
                             filtered_data: data.filtered_data,
-                            query: "",
-                            download_link: nil)
+                            query: "")
     {:ok, update_socket}
   end
 
@@ -24,7 +23,7 @@ defmodule NflRushingWeb.PageLive do
 
         _ ->
           filtered_data = DataManager.filter(query)
-          updated_socket = assign(socket, filtered_data: filtered_data, download_link: nil)
+          updated_socket = assign(socket, filtered_data: filtered_data)
           {:noreply, updated_socket}
     end
   end
@@ -38,21 +37,21 @@ defmodule NflRushingWeb.PageLive do
   @impl true
   def handle_event("sort-asc", %{"header" => header}, socket) do
     filtered_data = DataManager.sort({:asc, header})
-    updated_socket = assign(socket, filtered_data: filtered_data, download_link: nil)
+    updated_socket = assign(socket, filtered_data: filtered_data)
     {:noreply, updated_socket}
   end
 
   @impl true
   def handle_event("sort-desc", %{"header" => header}, socket) do
     filtered_data = DataManager.sort({:desc, header})
-    updated_socket = assign(socket, filtered_data: filtered_data, download_link: nil)
+    updated_socket = assign(socket, filtered_data: filtered_data)
     {:noreply, updated_socket}
   end
 
   @impl true
   def handle_event("next", _ , socket) do
     data = DataManager.next()
-    updated_socket = assign(socket, filtered_data: data.filtered_data, download_link: nil)
+    updated_socket = assign(socket, filtered_data: data.filtered_data)
     {:noreply, updated_socket}
   end
 
@@ -62,8 +61,7 @@ defmodule NflRushingWeb.PageLive do
     socket
     |> assign(
       filtered_data: data.filtered_data,
-      query: "",
-      download_link: nil
+      query: ""
     )
   end
 
