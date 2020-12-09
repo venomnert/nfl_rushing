@@ -37,10 +37,8 @@
       </tbody>
     </table>
   </div>
-  <a phx-click="export-csv" >Export as CSV</a>
-  <%= if !is_nil(@download_link) do %>
-    <a phx-click="export-csv" href=<%= Routes.static_path(@socket, "/export.csv?vsn=#{:os.system_time(:millisecond)}") %> download > Download</a>
-  <% end %>
+  
+  <a href="/export" target="_blank"> Download</a>
   <p><a phx-click="reset">Reset data</a></p>
 
   <p><a phx-click="next">Read More</a></p>

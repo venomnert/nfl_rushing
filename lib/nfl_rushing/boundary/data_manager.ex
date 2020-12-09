@@ -23,8 +23,8 @@ defmodule NflRushing.Boundary.DataManager do
     GenServer.call(__MODULE__, {:sort, sort_msg})
   end
 
-  def export do
-    GenServer.call(__MODULE__, :export)
+  def export(file) do
+    GenServer.call(__MODULE__, {:export, file})
   end
 
   def filter(query) do
@@ -94,9 +94,10 @@ defmodule NflRushing.Boundary.DataManager do
   end
 
   @impl true
-  def handle_call(:export, _from, state) do
-    url = state.filtered_data |> Rushing.create_csv(state.headers)
-
-    {:reply, url, state}
+  def handle_call({:export, file}, _from, state) do
+    state.filtered_data
+    |> Rushing.create_csv(state.headers, file)
+    
+    {:reply, :ok, state}
   end
 end

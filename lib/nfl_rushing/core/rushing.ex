@@ -1,6 +1,5 @@
 defmodule NflRushing.Core.Rushing do
   @ignore_keys ["Player", "Team", "Pos"]
-  @export_file Application.app_dir(:nfl_rushing, "priv/static/export.csv")
 
   def load_file(path) do
     path
@@ -59,17 +58,12 @@ defmodule NflRushing.Core.Rushing do
     |> Map.keys()
   end
 
-  def create_csv(data, header) do
+  def create_csv(data, header, file) do
     try do
-      remove_old_csv(@export_file)
+      data
+      |> CSV.encode(headers: header)
+      |> Enum.each(&IO.write(file, &1))
 
-      csv_data = data |> CSV.encode(headers: header)
-
-      file = File.open!(@export_file, [:write, :utf8])
-
-      csv_data |> Enum.each(&IO.write(file, &1))
-
-      @export_file
     rescue
       _ -> nil
     end
@@ -101,14 +95,5 @@ defmodule NflRushing.Core.Rushing do
     end
 
     Map.merge(map_a, map_b)
-  end
-
-  defp remove_old_csv(path) do
-    path
-    |> File.exists?()
-    |> case do
-      true -> File.rm!(path)
-      _ -> :ok
-    end
   end
 end
